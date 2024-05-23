@@ -6,7 +6,9 @@
 #include "SZ3/utils/ByteUtil.hpp"
 #include "SZ3/utils/MemoryUtil.hpp"
 #include "SZ3/utils/Timer.hpp"
-#include "SZ3/utils/ska_hash/unordered_map.hpp"
+#if !defined(__wasm32__)
+    #include "SZ3/utils/ska_hash/unordered_map.hpp"
+#endif // !defined(__wasm32__)
 #include <cassert>
 #include <cstdlib>
 #include <cstring>
@@ -525,7 +527,11 @@ namespace SZ3 {
             T max = s[0];
             offset = s[0]; //offset is min
 
-            ska::unordered_map<T, size_t> frequency;
+            #if defined(__wasm32__)
+                std::unordered_map<T, size_t> frequency;
+            #else
+                ska::unordered_map<T, size_t> frequency;
+            #endif // defined(__wasm32__)
             for (size_t i = 0; i < length; i++) {
                 frequency[s[i]]++;
             }
